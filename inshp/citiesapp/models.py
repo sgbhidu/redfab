@@ -1,37 +1,18 @@
 from django.db import models
 
 
-class Citie(models.Model):
-    City_ID=models.IntegerField(primary_key=True,unique=True)
-    City_Name=models.CharField(max_length=20)
-    URL = models.CharField(max_length=20)
-    PlacesToVisit = models.CharField(max_length=20)
-    State = models.CharField(max_length=20)
-    Country = models.CharField(max_length=20)
-    Weather = models.CharField(max_length=20)
-    IdealMonth = models.CharField(max_length=20)
-    IdealDuration = models.CharField(max_length=20)
-    NearestAirport = models.CharField(max_length=20)
-    UpcomingEvents = models.CharField(max_length=20)
-    About = models.CharField(max_length=20)
-    MoreOnCity = models.CharField(max_length=20)
-    Articles = models.CharField(max_length=20)
-    Reviews = models.CharField(max_length=20)
-    Photos = models.CharField(max_length=20)
-    Videos = models.CharField(max_length=20)
-    HowToReach = models.CharField(max_length=20)
-    def __str__(self):
-        return self.Places
+
+
 
 class Countrie(models.Model):
     Country_ID = models.IntegerField(primary_key=True)
-    CountryName = models.CharField(max_length=20)
+    CountryName = models.CharField(max_length=20,unique=True)
     URL = models.CharField(max_length=20)
     About = models.CharField(max_length=20)
-    Continent = models.CharField(max_length=20)
-    States = models.CharField(max_length=20)
+    continent = models.CharField(max_length=20)
+
     Visa = models.CharField(max_length=20)
-    City = models.CharField(max_length=20)
+    city = models.CharField(max_length=20)
 
     Events = models.CharField(max_length=20)
     Foods = models.CharField(max_length=20)
@@ -47,51 +28,22 @@ class Countrie(models.Model):
 
 class State(models.Model):
     State_ID = models.IntegerField(primary_key=True)
-    State_Name= models.CharField(max_length=20)
+    State_Name= models.CharField(max_length=20,unique=True)
     URL = models.CharField(max_length=20)
     About = models.CharField(max_length=20)
-    Country = models.CharField(max_length=20)
+    country = models.OneToOneField(Countrie,on_delete=models.CASCADE,max_length=20)
 
-    Places = models.CharField(max_length=20)
+
     Events = models.CharField(max_length=20)
     Foods = models.CharField(max_length=20)
     Photos = models.CharField(max_length=20)
     Map = models.CharField(max_length=20)
     Packages = models.CharField(max_length=20)
     Travels = models.CharField(max_length=20)
-    Hotels = models.CharField(max_length=20)
+
     Activities = models.CharField(max_length=20)
     def __str__(self):
-        return self.Places
-
-
-class Plac(models.Model):
-    Place_ID = models.IntegerField(primary_key=True)
-    Places = models.CharField(max_length=20)
-    URL = models.CharField(max_length=20)
-    City = models.ForeignKey(Citie,on_delete=models.CASCADE)
-    State = models.ForeignKey(State,on_delete=models.CASCADE)
-    Country = models.ForeignKey(Countrie,on_delete=models.CASCADE)
-
-    Description = models.CharField(max_length=20)
-    Themes = models.CharField(max_length=20)
-    FAQs=models.CharField(max_length=20)
-    Weather=models.CharField(max_length=20)
-    TimeRequired=models.CharField(max_length=20)
-    Timings=models.CharField(max_length=20)
-    EntryFee=models.CharField(max_length=20)
-    Reviews=models.CharField(max_length=20)
-    TripuppOpininon=models.CharField(max_length=20)
-    Food=models.CharField(max_length=20)
-    Photos=models.ImageField()
-    Videos= models.FileField(upload_to='videos/', null=True, verbose_name="")
-    Map=models.CharField(max_length=20)
-    HowToReach=models.CharField(max_length=200)
-    Articles=models.CharField(max_length=300)
-
-
-    def __str__(self):
-        return self.Places
+        return self.State_Name
 
 
 
@@ -99,29 +51,7 @@ class Plac(models.Model):
 
 
 
-class User(models.Model):
-    UserID= models.IntegerField(primary_key=True)
-    Name = models.CharField(max_length=20)
-    URL= models.URLField()
-    Mobile=models.IntegerField(max_length=20)
-    EmailId = models.EmailField(max_length=20)
-    Password = models.CharField(max_length=20)
-    Gender = models.CharField(max_length=20)
-    City = models.OneToOneField(Citie,to_field='City_Name',max_length=20)
-    State = models.OneToOneField(State,to_field='State_Name',max_length=20)
-    Country = models.OneToOneField(Countrie, to_field='CountryName',unique=True,on_delete=models.CASCADE)
-    Language = models.CharField(max_length=20)
-    Pic = models.ImageField(max_length=20)
-    Facebook = models.CharField(max_length=20)
-    Instagram = models.CharField(max_length=20)
-    Twitter = models.CharField(max_length=20)
-    Visited = models.CharField(max_length=20)
-    Wishlist = models.CharField(max_length=20)
-    Friends = models.CharField(max_length=20)
-    Contributions = models.CharField(max_length=20)
-    Reviews = models.CharField(max_length=20)
-    def __str__(self):
-        return self.Name
+
 
 
 
@@ -145,7 +75,7 @@ class Restaurant(models.Model):
 class Visa(models.Model):
     Visa_ID = models.IntegerField(primary_key=True)
     URL = models.URLField(max_length=20)
-    Country = models.CharField(max_length=20)
+    country = models.OneToOneField(Countrie,to_field='CountryName',on_delete=models.CASCADE,max_length=20)
     About = models.CharField(max_length=20)
     FAQS = models.CharField(max_length=20)
 
@@ -154,20 +84,99 @@ class Visa(models.Model):
         return self.Visa_ID
 
 class Storie(models.Model):
-    Article_ID = models.IntegerField(primary_key=True)
-    ArticleName = models.CharField(max_length=20)
+    Article_ID = models.IntegerField(primary_key=True,auto_created=True)
+    ArticleName = models.CharField(max_length=20,unique=True)
     URL = models.CharField(max_length=20)
     Description = models.CharField(max_length=20)
     Category = models.CharField(max_length=20)
     Vertical = models.CharField(max_length=20)
-    Place = models.CharField(max_length=20)
-    City = models.CharField(max_length=20)
-    Country = models.CharField(max_length=20)
+    #place = models.OneToOneField(Place,to_field='Places',on_delete=models.CASCADE)
+
+    country = models.OneToOneField(Countrie,to_field='CountryName',on_delete=models.CASCADE)
     Months = models.CharField(max_length=20)
     WrittenBy = models.CharField(max_length=20)
     Authortype = models.CharField(max_length=20)
     def __str__(self):
         return self.ArticleName
+
+
+
+class Place(models.Model):
+    Place_ID = models.IntegerField(primary_key=True)
+    Places = models.CharField(max_length=20)
+    URL = models.CharField(max_length=20)
+    #City = models.OneToOneField(Citie,to_field='CityName',on_delete=models.CASCADE)
+    State = models.OneToOneField(State,to_field='State_Name',on_delete=models.CASCADE)
+    Country = models.OneToOneField(Countrie,to_field='CountryName',on_delete=models.CASCADE)
+
+    Description = models.CharField(max_length=20)
+    Themes = models.CharField(max_length=20)
+    FAQs=models.CharField(max_length=20)
+    Weather=models.CharField(max_length=20)
+    TimeRequired=models.CharField(max_length=20)
+    Timings=models.CharField(max_length=20)
+    EntryFee=models.CharField(max_length=20)
+    Reviews=models.CharField(max_length=20)
+    TripuppOpininon=models.CharField(max_length=20)
+    Food=models.CharField(max_length=20)
+    Photos=models.ImageField()
+    Videos= models.FileField(upload_to='videos/', null=True, verbose_name="video")
+    Map=models.CharField(max_length=20)
+    HowToReach=models.CharField(max_length=200)
+    Articles=models.OneToOneField(Storie,to_field='ArticleName',on_delete=models.SET_NULL,null=True)
+
+
+    def __str__(self):
+        return self.Places
+
+
+class Citie(models.Model):
+    City_ID=models.IntegerField(primary_key=True,unique=True)
+    City_Name=models.CharField(max_length=20,unique=True)
+    URL = models.CharField(max_length=20)
+    PlacesToVisit = models.ForeignKey(Place,on_delete=models.CASCADE)
+    state = models.CharField(max_length=20)
+    country = models.OneToOneField(Countrie,to_field='CountryName',on_delete=models.CASCADE)
+    Weather = models.CharField(max_length=20)
+    IdealMonth = models.CharField(max_length=20)
+    IdealDuration = models.CharField(max_length=20)
+    NearestAirport = models.CharField(max_length=20)
+    UpcomingEvents = models.CharField(max_length=20)
+    About = models.CharField(max_length=20)
+    MoreOnCity = models.CharField(max_length=20)
+    Articles = models.ForeignKey(Storie,on_delete=models.SET_NULL,null=True)
+    Reviews = models.CharField(max_length=20)
+    Photos = models.CharField(max_length=20)
+    Videos = models.CharField(max_length=20)
+    HowToReach = models.CharField(max_length=20)
+    def __str__(self):
+        return self.City_Name
+
+class User(models.Model):
+    UserID= models.IntegerField(primary_key=True)
+    Name = models.CharField(max_length=20)
+    URL= models.URLField()
+    Mobile=models.IntegerField(max_length=20)
+    EmailId = models.EmailField(max_length=20)
+    Password = models.CharField(max_length=20)
+    Gender = models.CharField(max_length=20)
+    city = models.OneToOneField(Citie,to_field='City_Name',on_delete=models.SET_NULL,null=True)
+    state = models.OneToOneField(State,to_field='State_Name',on_delete=models.SET_NULL,null=True)
+    country = models.OneToOneField(Countrie, to_field='CountryName',unique=True,on_delete=models.CASCADE)
+    Language = models.CharField(max_length=20)
+    Pic = models.ImageField(max_length=20)
+    Facebook = models.CharField(max_length=20)
+    Instagram = models.CharField(max_length=20)
+    Twitter = models.CharField(max_length=20)
+    Visited = models.CharField(max_length=20)
+    Wishlist = models.CharField(max_length=20)
+    Friends = models.CharField(max_length=20)
+    Contributions = models.CharField(max_length=20)
+    Reviews = models.CharField(max_length=20)
+    def __str__(self):
+        return self.Name
+
+
 
 class Event(models.Model):
     Fest_ID=models.IntegerField(primary_key=True)
@@ -178,9 +187,9 @@ class Event(models.Model):
     Category = models.CharField(max_length=20)
     Month = models.CharField(max_length=20)
     Partition = models.CharField(max_length=20)
-    Place = models.CharField(max_length=20)
-    City = models.CharField(max_length=20)
-    Country = models.CharField(max_length=20)
+    place = models.CharField(max_length=20)
+    city = models.ForeignKey(Citie,on_delete=models.CASCADE)
+    country = models.ForeignKey(Countrie,on_delete=models.CASCADE)
     def __str__(self):
         return self.FestName
 
