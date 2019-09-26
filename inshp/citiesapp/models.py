@@ -289,7 +289,7 @@ class Visa(models.Model):
     def __str__(self):
         return self.Visa_ID
 
-    
+
 class Place(models.Model):
     Place_ID = models.AutoField(primary_key=True)
     Places = models.CharField(max_length=20)
@@ -346,7 +346,7 @@ class Citie(models.Model):
     City_Name=models.CharField(max_length=20,unique=True)
     URL = models.CharField(max_length=20)
     PlacesToVisit = models.ForeignKey(Place,on_delete=models.CASCADE)
-    state = models.OneToOneField(State,to_field='State_Name',max_length=20)
+    state = models.OneToOneField(State,to_field='State_Name',on_delete=models.CASCADE,max_length=20)
     country = models.OneToOneField(Countrie,to_field='CountryName',on_delete=models.CASCADE)
     Weather = models.CharField(max_length=20)
     IdealMonth = models.CharField(max_length=20)
@@ -404,6 +404,11 @@ class Event(models.Model):
     country = models.ForeignKey(Countrie,on_delete=models.CASCADE)
     def __str__(self):
         return self.FestName
+
+
+
+
+
 
 
 
